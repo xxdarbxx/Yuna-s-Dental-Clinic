@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Treatments — Yuna's Dental Clinic</title>
+  <link rel="icon" href="../assets/img/logo.jpg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/dashboard.css" />
+</head>
+<body>
+  <div class="admin-layout">
+    <aside class="sidebar">
+      <a href="dashboard.html" class="sidebar__brand">
+        <img src="../assets/img/logo.jpg" alt="Yuna's Dental Clinic" />
+        <span>
+          <strong>Yuna's Dental Clinic</strong>
+          <span>Staff Portal</span>
+        </span>
+      </a>
+      <nav class="sidebar__nav">
+        <a href="dashboard.html"><span class="ico">📊</span> Dashboard</a>
+        <a href="patients.html"><span class="ico">👤</span> Patients</a>
+        <a href="appointments.html"><span class="ico">📅</span> Appointments</a>
+        <a href="treatments.html" class="active"><span class="ico">🦷</span> Treatments</a>
+        <a href="billing.html"><span class="ico">💰</span> Billing</a>
+        <a href="../index.html"><span class="ico">🌐</span> View Website</a>
+      </nav>
+      <div class="sidebar__footer">
+        <div class="sidebar__user">
+          <div class="avatar" id="userAvatar">--</div>
+          <div>
+            <strong id="userName">Loading…</strong>
+            <span id="userRoleLabel">—</span>
+          </div>
+        </div>
+        <button class="btn btn--outline btn--block btn--sm" id="logoutBtn">Log Out</button>
+      </div>
+    </aside>
+
+    <main class="main">
+      <div class="topbar">
+        <button class="topbar__menu" id="sidebarToggle">☰</button>
+        <div>
+          <h1>Treatments</h1>
+          <p class="topbar__sub">Treatment plans, tooth chart &amp; procedures</p>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="panel">
+          <div class="field" style="max-width:360px;">
+            <label for="patientSelect">Select Patient</label>
+            <select id="patientSelect">
+              <option value="">— Choose a patient —</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="patientEmptyState" class="panel">
+          <div class="empty-state">
+            <div class="icon">🦷</div>
+            <p>Select a patient above to view their tooth chart and treatment history.</p>
+          </div>
+        </div>
+
+        <div id="patientTreatmentArea" style="display:none;">
+          <div class="panel">
+            <div class="panel__head">
+              <h2>Tooth Chart</h2>
+              <button class="btn btn--primary btn--sm" id="newPlanBtn">+ New Treatment Plan</button>
+            </div>
+            <div class="tooth-chart">
+              <div class="tooth-arch" id="upperArch"></div>
+              <div class="tooth-arch" id="lowerArch"></div>
+              <div class="tooth-legend">
+                <span><span class="dot" style="background:var(--amber-light); border:1px solid var(--amber);"></span> Planned</span>
+                <span><span class="dot" style="background:var(--blue-light); border:1px solid var(--blue);"></span> In Progress</span>
+                <span><span class="dot" style="background:var(--green-light); border:1px solid var(--green);"></span> Completed</span>
+                <span><span class="dot" style="background:var(--white); border:1px solid var(--border);"></span> Healthy</span>
+              </div>
+              <p class="text-muted" id="selectedTeethHint" style="font-size:0.8rem;"></p>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel__head">
+              <h2>Treatment Plans</h2>
+            </div>
+            <div class="table-wrap">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Procedure</th>
+                    <th>Tooth #</th>
+                    <th>Status</th>
+                    <th style="text-align:right;">Cost</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody id="plansBody">
+                  <tr><td colspan="6" class="text-center text-muted" style="padding:24px;">No treatment plans yet.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Treatment Plan Modal -->
+  <div class="modal-overlay" id="planModal">
+    <div class="modal">
+      <div class="modal__head">
+        <h2 id="planModalTitle">New Treatment Plan</h2>
+        <button class="modal__close" data-close-modal>✕</button>
+      </div>
+      <div class="form-error" id="planError"></div>
+      <form id="planForm">
+        <input type="hidden" id="planId" />
+        <div class="field-row">
+          <div class="field">
+            <label for="planProcedure">Procedure</label>
+            <select id="planProcedure" required>
+              <option value="">Select a procedure</option>
+              <option>Cleaning</option>
+              <option>Filling</option>
+              <option>Root Canal</option>
+              <option>Extraction</option>
+              <option>Braces</option>
+              <option>Crown</option>
+              <option>Veneers</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="planTeeth">Tooth Number(s) <span class="hint">FDI, comma-separated</span></label>
+            <input type="text" id="planTeeth" placeholder="e.g. 16, 17" />
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="planStatus">Status</label>
+            <select id="planStatus">
+              <option value="planned">Planned</option>
+              <option value="in_progress">In Progress</option>
+              <option value="completed">Completed</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="planCost">Cost (₱)</label>
+            <input type="number" id="planCost" min="0" step="0.01" value="0" />
+          </div>
+        </div>
+        <div class="field">
+          <label for="planDate">Date Performed <span class="hint">(optional)</span></label>
+          <input type="date" id="planDate" />
+        </div>
+        <div class="field">
+          <label for="planNotes">Dentist Notes</label>
+          <textarea id="planNotes" placeholder="Clinical notes about this procedure…"></textarea>
+        </div>
+        <div class="modal__actions">
+          <button type="button" class="btn btn--danger" id="planDeleteBtn" data-admin-only style="margin-right:auto; display:none;">Delete</button>
+          <button type="button" class="btn btn--outline" data-close-modal>Cancel</button>
+          <button type="submit" class="btn btn--primary" id="planSaveBtn">Save Treatment Plan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script type="module" src="js/treatments.js"></script>
+</body>
+</html>

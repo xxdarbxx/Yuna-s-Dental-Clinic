@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Appointments — Yuna's Dental Clinic</title>
+  <link rel="icon" href="../assets/img/logo.jpg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/dashboard.css" />
+</head>
+<body>
+  <div class="admin-layout">
+    <aside class="sidebar">
+      <a href="dashboard.html" class="sidebar__brand">
+        <img src="../assets/img/logo.jpg" alt="Yuna's Dental Clinic" />
+        <span>
+          <strong>Yuna's Dental Clinic</strong>
+          <span>Staff Portal</span>
+        </span>
+      </a>
+      <nav class="sidebar__nav">
+        <a href="dashboard.html"><span class="ico">📊</span> Dashboard</a>
+        <a href="patients.html"><span class="ico">👤</span> Patients</a>
+        <a href="appointments.html" class="active"><span class="ico">📅</span> Appointments</a>
+        <a href="treatments.html"><span class="ico">🦷</span> Treatments</a>
+        <a href="billing.html"><span class="ico">💰</span> Billing</a>
+        <a href="../index.html"><span class="ico">🌐</span> View Website</a>
+      </nav>
+      <div class="sidebar__footer">
+        <div class="sidebar__user">
+          <div class="avatar" id="userAvatar">--</div>
+          <div>
+            <strong id="userName">Loading…</strong>
+            <span id="userRoleLabel">—</span>
+          </div>
+        </div>
+        <button class="btn btn--outline btn--block btn--sm" id="logoutBtn">Log Out</button>
+      </div>
+    </aside>
+
+    <main class="main">
+      <div class="topbar">
+        <button class="topbar__menu" id="sidebarToggle">☰</button>
+        <div>
+          <h1>Appointments</h1>
+          <p class="topbar__sub" id="requestsLabel">—</p>
+        </div>
+        <div class="quick-actions">
+          <button class="btn btn--primary btn--sm" id="bookBtn">+ Book Appointment</button>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="panel">
+          <div class="calendar-toolbar">
+            <div class="calendar-nav">
+              <button class="btn btn--outline btn--sm" id="prevBtn">‹</button>
+              <h2 id="periodLabel">—</h2>
+              <button class="btn btn--outline btn--sm" id="nextBtn">›</button>
+              <button class="btn btn--outline btn--sm" id="todayBtn">Today</button>
+            </div>
+            <div class="view-switch">
+              <button data-view="month" class="active">Month</button>
+              <button data-view="week">Week</button>
+              <button data-view="day">Day</button>
+            </div>
+          </div>
+
+          <div id="monthView"></div>
+          <div id="weekView" class="week-grid" style="display:none;"></div>
+          <div id="dayView" class="day-list" style="display:none;"></div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Appointment Modal (book / edit / reschedule) -->
+  <div class="modal-overlay" id="apptModal">
+    <div class="modal">
+      <div class="modal__head">
+        <h2 id="apptModalTitle">Book Appointment</h2>
+        <button class="modal__close" data-close-modal>✕</button>
+      </div>
+      <div class="form-error" id="apptError"></div>
+      <form id="apptForm">
+        <input type="hidden" id="apptId" />
+        <div class="field">
+          <label for="apptPatient">Patient</label>
+          <select id="apptPatient">
+            <option value="">— Guest (no patient record) —</option>
+          </select>
+        </div>
+        <div class="field-row" id="guestFields">
+          <div class="field">
+            <label for="guestName">Guest Name</label>
+            <input type="text" id="guestName" />
+          </div>
+          <div class="field">
+            <label for="guestPhone">Guest Phone</label>
+            <input type="tel" id="guestPhone" />
+          </div>
+        </div>
+        <div class="field-row field-row--3">
+          <div class="field">
+            <label for="apptDate">Date</label>
+            <input type="date" id="apptDate" required />
+          </div>
+          <div class="field">
+            <label for="apptStart">Start Time</label>
+            <input type="time" id="apptStart" required />
+          </div>
+          <div class="field">
+            <label for="apptEnd">End Time <span class="hint">(optional)</span></label>
+            <input type="time" id="apptEnd" />
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="apptService">Service</label>
+            <select id="apptService" required>
+              <option value="">Select a service</option>
+              <option>Cleaning</option>
+              <option>Filling</option>
+              <option>Root Canal</option>
+              <option>Extraction</option>
+              <option>Braces</option>
+              <option>Crown</option>
+              <option>Veneers</option>
+              <option>Consultation</option>
+              <option>General Inquiry</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="apptStatus">Status</label>
+            <select id="apptStatus">
+              <option value="requested">Requested</option>
+              <option value="scheduled">Scheduled</option>
+              <option value="confirmed">Confirmed</option>
+              <option value="checked_in">Checked In</option>
+              <option value="waiting">Waiting</option>
+              <option value="in_progress">In Progress</option>
+              <option value="completed">Completed</option>
+              <option value="cancelled">Cancelled</option>
+              <option value="no_show">No Show</option>
+            </select>
+          </div>
+        </div>
+        <div class="field">
+          <label for="apptNotes">Notes</label>
+          <textarea id="apptNotes"></textarea>
+        </div>
+        <div class="modal__actions">
+          <button type="button" class="btn btn--danger" id="apptDeleteBtn" data-admin-only style="margin-right:auto; display:none;">Delete</button>
+          <button type="button" class="btn btn--outline" data-close-modal>Cancel</button>
+          <button type="submit" class="btn btn--primary" id="apptSaveBtn">Save Appointment</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script type="module" src="js/appointments.js"></script>
+</body>
+</html>

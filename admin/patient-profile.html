@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Patient Profile — Yuna's Dental Clinic</title>
+  <link rel="icon" href="../assets/img/logo.jpg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/dashboard.css" />
+</head>
+<body>
+  <div class="admin-layout">
+    <aside class="sidebar">
+      <a href="dashboard.html" class="sidebar__brand">
+        <img src="../assets/img/logo.jpg" alt="Yuna's Dental Clinic" />
+        <span>
+          <strong>Yuna's Dental Clinic</strong>
+          <span>Staff Portal</span>
+        </span>
+      </a>
+      <nav class="sidebar__nav">
+        <a href="dashboard.html"><span class="ico">📊</span> Dashboard</a>
+        <a href="patients.html" class="active"><span class="ico">👤</span> Patients</a>
+        <a href="appointments.html"><span class="ico">📅</span> Appointments</a>
+        <a href="treatments.html"><span class="ico">🦷</span> Treatments</a>
+        <a href="billing.html"><span class="ico">💰</span> Billing</a>
+        <a href="../index.html"><span class="ico">🌐</span> View Website</a>
+      </nav>
+      <div class="sidebar__footer">
+        <div class="sidebar__user">
+          <div class="avatar" id="userAvatar">--</div>
+          <div>
+            <strong id="userName">Loading…</strong>
+            <span id="userRoleLabel">—</span>
+          </div>
+        </div>
+        <button class="btn btn--outline btn--block btn--sm" id="logoutBtn">Log Out</button>
+      </div>
+    </aside>
+
+    <main class="main">
+      <div class="topbar">
+        <button class="topbar__menu" id="sidebarToggle">☰</button>
+        <div>
+          <h1>Patient Profile</h1>
+          <p class="topbar__sub"><a href="patients.html" style="color:var(--purple); font-weight:600;">← Back to Patients</a></p>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="panel" id="loadingPanel">
+          <p class="text-muted">Loading patient…</p>
+        </div>
+
+        <div id="profileContent" style="display:none;">
+          <div class="panel">
+            <div class="profile-header">
+              <div class="avatar" id="patientAvatar">--</div>
+              <div>
+                <h1 id="patientName" class="mt-0">—</h1>
+                <p id="patientMeta">—</p>
+              </div>
+            </div>
+
+            <div class="tabs">
+              <button class="active" data-tab="overview">Overview</button>
+              <button data-tab="medical">Medical &amp; Dental History</button>
+              <button data-tab="treatments">Treatment History</button>
+              <button data-tab="documents">Documents &amp; X-rays</button>
+              <button data-tab="notes">Notes</button>
+            </div>
+
+            <!-- Overview -->
+            <div class="tab-panel active" id="tab-overview">
+              <div class="form-error" id="overviewError"></div>
+              <form id="overviewForm">
+                <fieldset>
+                  <legend>Contact Information</legend>
+                  <div class="field-row">
+                    <div class="field">
+                      <label for="firstName">First Name</label>
+                      <input type="text" id="firstName" required />
+                    </div>
+                    <div class="field">
+                      <label for="lastName">Last Name</label>
+                      <input type="text" id="lastName" required />
+                    </div>
+                  </div>
+                  <div class="field-row field-row--3">
+                    <div class="field">
+                      <label for="dob">Date of Birth</label>
+                      <input type="date" id="dob" />
+                    </div>
+                    <div class="field">
+                      <label for="gender">Gender</label>
+                      <select id="gender">
+                        <option value="">Select</option>
+                        <option>Male</option>
+                        <option>Female</option>
+                        <option>Other</option>
+                      </select>
+                    </div>
+                    <div class="field">
+                      <label for="bloodType">Blood Type</label>
+                      <input type="text" id="bloodType" placeholder="e.g. O+" />
+                    </div>
+                  </div>
+                  <div class="field-row">
+                    <div class="field">
+                      <label for="phone">Phone Number</label>
+                      <input type="tel" id="phone" required />
+                    </div>
+                    <div class="field">
+                      <label for="email">Email Address</label>
+                      <input type="email" id="email" />
+                    </div>
+                  </div>
+                  <div class="field">
+                    <label for="address">Address</label>
+                    <input type="text" id="address" />
+                  </div>
+                </fieldset>
+
+                <fieldset>
+                  <legend>Emergency Contact</legend>
+                  <div class="field-row field-row--3">
+                    <div class="field">
+                      <label for="ecName">Name</label>
+                      <input type="text" id="ecName" />
+                    </div>
+                    <div class="field">
+                      <label for="ecPhone">Phone</label>
+                      <input type="tel" id="ecPhone" />
+                    </div>
+                    <div class="field">
+                      <label for="ecRelationship">Relationship</label>
+                      <input type="text" id="ecRelationship" placeholder="e.g. Spouse" />
+                    </div>
+                  </div>
+                </fieldset>
+
+                <div class="modal__actions" style="margin-top:0;">
+                  <button type="submit" class="btn btn--primary">Save Changes</button>
+                </div>
+              </form>
+            </div>
+
+            <!-- Medical & Dental -->
+            <div class="tab-panel" id="tab-medical">
+              <div class="form-error" id="medicalError"></div>
+              <form id="medicalForm">
+                <div class="field">
+                  <label for="allergies">Allergies</label>
+                  <textarea id="allergies" placeholder="e.g. Penicillin, Latex"></textarea>
+                </div>
+                <div class="field">
+                  <label for="medicalHistory">Medical History</label>
+                  <textarea id="medicalHistory" placeholder="Existing conditions, medications, surgeries…"></textarea>
+                </div>
+                <div class="field">
+                  <label for="dentalHistory">Dental History</label>
+                  <textarea id="dentalHistory" placeholder="Past dental treatments, concerns…"></textarea>
+                </div>
+                <div class="modal__actions" style="margin-top:0;">
+                  <button type="submit" class="btn btn--primary">Save Changes</button>
+                </div>
+              </form>
+            </div>
+
+            <!-- Treatment History -->
+            <div class="tab-panel" id="tab-treatments">
+              <div class="panel__head" style="margin-bottom:14px;">
+                <p class="text-muted mb-0">All treatment plans and procedures for this patient.</p>
+                <a href="#" id="newTreatmentLink" class="btn btn--primary btn--sm">+ New Treatment Plan</a>
+              </div>
+              <div class="table-wrap">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Date</th>
+                      <th>Procedure</th>
+                      <th>Tooth #</th>
+                      <th>Status</th>
+                      <th style="text-align:right;">Cost</th>
+                    </tr>
+                  </thead>
+                  <tbody id="treatmentsBody">
+                    <tr><td colspan="5" class="text-center text-muted" style="padding:24px;">Loading…</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Documents -->
+            <div class="tab-panel" id="tab-documents">
+              <label class="dropzone" for="fileInput">
+                📎 Click to upload an X-ray or document (PDF, JPG, PNG)
+                <input type="file" id="fileInput" style="display:none;" accept=".pdf,.jpg,.jpeg,.png" />
+              </label>
+              <div class="field" style="max-width:220px; margin-top:14px;">
+                <label for="fileType">File Type</label>
+                <select id="fileType">
+                  <option value="xray">X-ray</option>
+                  <option value="document">Document</option>
+                </select>
+              </div>
+              <div class="doc-list" id="docList" style="margin-top:18px;"></div>
+            </div>
+
+            <!-- Notes -->
+            <div class="tab-panel" id="tab-notes">
+              <div class="form-error" id="notesError"></div>
+              <form id="notesForm">
+                <div class="field">
+                  <label for="notes">General Notes</label>
+                  <textarea id="notes" style="min-height:160px;" placeholder="Any additional notes about this patient…"></textarea>
+                </div>
+                <div class="modal__actions" style="margin-top:0;">
+                  <button type="submit" class="btn btn--primary">Save Notes</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script type="module" src="js/patient-profile.js"></script>
+</body>
+</html>

@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Billing — Yuna's Dental Clinic</title>
+  <link rel="icon" href="../assets/img/logo.jpg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/dashboard.css" />
+</head>
+<body>
+  <div class="admin-layout">
+    <aside class="sidebar">
+      <a href="dashboard.html" class="sidebar__brand">
+        <img src="../assets/img/logo.jpg" alt="Yuna's Dental Clinic" />
+        <span>
+          <strong>Yuna's Dental Clinic</strong>
+          <span>Staff Portal</span>
+        </span>
+      </a>
+      <nav class="sidebar__nav">
+        <a href="dashboard.html"><span class="ico">📊</span> Dashboard</a>
+        <a href="patients.html"><span class="ico">👤</span> Patients</a>
+        <a href="appointments.html"><span class="ico">📅</span> Appointments</a>
+        <a href="treatments.html"><span class="ico">🦷</span> Treatments</a>
+        <a href="billing.html" class="active"><span class="ico">💰</span> Billing</a>
+        <a href="../index.html"><span class="ico">🌐</span> View Website</a>
+      </nav>
+      <div class="sidebar__footer">
+        <div class="sidebar__user">
+          <div class="avatar" id="userAvatar">--</div>
+          <div>
+            <strong id="userName">Loading…</strong>
+            <span id="userRoleLabel">—</span>
+          </div>
+        </div>
+        <button class="btn btn--outline btn--block btn--sm" id="logoutBtn">Log Out</button>
+      </div>
+    </aside>
+
+    <main class="main">
+      <div class="topbar">
+        <button class="topbar__menu" id="sidebarToggle">☰</button>
+        <div>
+          <h1>Billing &amp; Payments</h1>
+          <p class="topbar__sub" id="outstandingLabel">—</p>
+        </div>
+        <div class="quick-actions">
+          <button class="btn btn--primary btn--sm" id="newInvoiceBtn">+ Create Invoice</button>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="panel">
+          <div class="toolbar">
+            <div class="search-input">
+              <input type="text" id="searchInput" placeholder="Search by patient name or invoice #…" />
+            </div>
+            <select id="statusFilter">
+              <option value="">All Statuses</option>
+              <option value="unpaid">Unpaid</option>
+              <option value="partial">Partial</option>
+              <option value="paid">Paid</option>
+            </select>
+          </div>
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Invoice #</th>
+                  <th>Patient</th>
+                  <th>Date</th>
+                  <th style="text-align:right;">Total</th>
+                  <th style="text-align:right;">Paid</th>
+                  <th style="text-align:right;">Balance</th>
+                  <th>Status</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="invoicesBody">
+                <tr><td colspan="8" class="text-center text-muted" style="padding:24px;">Loading…</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Create Invoice Modal -->
+  <div class="modal-overlay" id="invoiceModal">
+    <div class="modal modal--wide">
+      <div class="modal__head">
+        <h2>Create Invoice</h2>
+        <button class="modal__close" data-close-modal>✕</button>
+      </div>
+      <div class="form-error" id="invoiceError"></div>
+      <form id="invoiceForm">
+        <div class="field">
+          <label for="invoicePatient">Patient</label>
+          <select id="invoicePatient" required>
+            <option value="">— Choose a patient —</option>
+          </select>
+        </div>
+
+        <fieldset>
+          <legend>Line Items</legend>
+          <div id="itemRows"></div>
+          <button type="button" class="btn btn--outline btn--sm" id="addItemBtn">+ Add Item</button>
+        </fieldset>
+
+        <div class="field-row field-row--3">
+          <div class="field">
+            <label for="discountType">Discount Type</label>
+            <select id="discountType">
+              <option value="none">None</option>
+              <option value="senior">Senior Citizen</option>
+              <option value="pwd">PWD</option>
+              <option value="insurance">Insurance</option>
+              <option value="custom">Custom</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="discountAmount">Discount Amount (₱)</label>
+            <input type="number" id="discountAmount" min="0" step="0.01" value="0" />
+          </div>
+          <div class="field">
+            <label for="insuranceDeduction">Insurance Deduction (₱)</label>
+            <input type="number" id="insuranceDeduction" min="0" step="0.01" value="0" />
+          </div>
+        </div>
+
+        <div class="invoice-summary">
+          <div class="row"><span>Subtotal</span><strong id="sumSubtotal">₱0.00</strong></div>
+          <div class="row"><span>Discount</span><strong id="sumDiscount">-₱0.00</strong></div>
+          <div class="row"><span>Insurance Deduction</span><strong id="sumInsurance">-₱0.00</strong></div>
+          <div class="row total"><span>Total Due</span><strong id="sumTotal">₱0.00</strong></div>
+        </div>
+
+        <div class="modal__actions">
+          <button type="button" class="btn btn--outline" data-close-modal>Cancel</button>
+          <button type="submit" class="btn btn--primary" id="invoiceSaveBtn">Create Invoice</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Invoice Detail / Payment Modal -->
+  <div class="modal-overlay" id="detailModal">
+    <div class="modal modal--wide">
+      <div class="modal__head">
+        <h2 id="detailTitle">Invoice</h2>
+        <button class="modal__close" data-close-modal>✕</button>
+      </div>
+
+      <div class="two-col">
+        <div>
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr><th>Description</th><th>Qty</th><th style="text-align:right;">Unit Price</th><th style="text-align:right;">Subtotal</th></tr>
+              </thead>
+              <tbody id="detailItems"></tbody>
+            </table>
+          </div>
+
+          <div class="invoice-summary" style="margin-top:18px;">
+            <div class="row"><span>Subtotal</span><strong id="detailSubtotal">—</strong></div>
+            <div class="row"><span>Discount</span><strong id="detailDiscount">—</strong></div>
+            <div class="row"><span>Insurance Deduction</span><strong id="detailInsurance">—</strong></div>
+            <div class="row total"><span>Total</span><strong id="detailTotal">—</strong></div>
+            <div class="row"><span>Amount Paid</span><strong id="detailPaid">—</strong></div>
+            <div class="row balance"><span>Balance</span><strong id="detailBalance">—</strong></div>
+          </div>
+
+          <h3 style="margin-top:22px;">Payment History</h3>
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead><tr><th>Date</th><th>Method</th><th>Reference</th><th style="text-align:right;">Amount</th></tr></thead>
+              <tbody id="paymentsBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div>
+          <div class="panel" style="box-shadow:none; border:1px solid var(--border);">
+            <h3 class="mt-0">Record Payment</h3>
+            <div class="form-error" id="paymentError"></div>
+            <form id="paymentForm">
+              <div class="field">
+                <label for="paymentAmount">Amount (₱)</label>
+                <input type="number" id="paymentAmount" min="0.01" step="0.01" required />
+              </div>
+              <div class="field">
+                <label for="paymentMethod">Payment Method</label>
+                <select id="paymentMethod">
+                  <option value="cash">Cash</option>
+                  <option value="gcash">GCash</option>
+                  <option value="maya">Maya</option>
+                  <option value="credit_card">Credit Card</option>
+                  <option value="bank_transfer">Bank Transfer</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="paymentReference">Reference # <span class="hint">(optional)</span></label>
+                <input type="text" id="paymentReference" />
+              </div>
+              <button type="submit" class="btn btn--primary btn--block">Record Payment</button>
+            </form>
+            <button type="button" class="btn btn--outline btn--block" style="margin-top:10px;" id="printReceiptBtn">🖨️ Print Receipt</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="receiptPrintArea">
+    <div class="receipt">
+      <div class="receipt__head">
+        <img src="../assets/img/logo.jpg" alt="Yuna's Dental Clinic" />
+        <strong>Yuna's Dental Clinic</strong>
+        <p style="margin:4px 0 0; font-size:0.78rem;">2021 Mindanao Ave., Sampaloc, Manila<br />0998-298-6745</p>
+      </div>
+      <div class="receipt__row"><span>Invoice #</span><strong id="rInvoiceNo">—</strong></div>
+      <div class="receipt__row"><span>Date</span><strong id="rDate">—</strong></div>
+      <div class="receipt__row"><span>Patient</span><strong id="rPatient">—</strong></div>
+      <hr style="border:none; border-top:1px dashed var(--border); margin:14px 0;" />
+      <div id="rItems"></div>
+      <hr style="border:none; border-top:1px dashed var(--border); margin:14px 0;" />
+      <div class="receipt__row"><span>Subtotal</span><span id="rSubtotal">—</span></div>
+      <div class="receipt__row"><span>Discount</span><span id="rDiscount">—</span></div>
+      <div class="receipt__row"><span>Insurance Deduction</span><span id="rInsurance">—</span></div>
+      <div class="receipt__row"><strong>Total</strong><strong id="rTotal">—</strong></div>
+      <div class="receipt__row"><span>Amount Paid</span><span id="rPaid">—</span></div>
+      <div class="receipt__row"><strong>Balance</strong><strong id="rBalance">—</strong></div>
+      <div class="receipt__foot">Thank you for visiting Yuna's Dental Clinic!</div>
+    </div>
+  </div>
+
+  <script type="module" src="js/billing.js"></script>
+</body>
+</html>

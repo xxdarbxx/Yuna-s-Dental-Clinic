@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Book an Appointment — Yuna's Dental Clinic</title>
+  <link rel="icon" href="assets/img/logo.jpg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+
+  <header class="header">
+    <div class="container header__inner">
+      <a href="index.html" class="brand">
+        <img src="assets/img/logo.jpg" alt="Yuna's Dental Clinic logo" />
+        <span class="brand__text">
+          <strong>Yuna's Dental Clinic</strong>
+          <span>Sampaloc, Manila</span>
+        </span>
+      </a>
+      <nav class="nav">
+        <ul class="nav__links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="services.html">Services</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+        <div class="nav__actions">
+          <a href="tel:09982986745" class="btn btn--outline">0998-298-6745</a>
+          <a href="book-appointment.html" class="btn btn--primary">Book Appointment</a>
+        </div>
+      </nav>
+      <button class="nav__toggle" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+    </div>
+  </header>
+
+  <section class="page-hero">
+    <div class="container">
+      <span class="eyebrow">Book an Appointment</span>
+      <h1>Let's find you a time that works</h1>
+      <p class="breadcrumb"><a href="index.html">Home</a> / Book Appointment</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div style="max-width:640px; margin:0 auto;">
+        <div class="form-card">
+          <h2 class="mt-0">Request an Appointment</h2>
+          <p>Tell us a bit about what you need. Our team will confirm your appointment by phone or email.</p>
+
+          <div class="form-error" id="bookError"></div>
+
+          <form id="bookForm">
+            <div class="field-row">
+              <div class="field">
+                <label for="name">Full Name</label>
+                <input type="text" id="name" required placeholder="Juan Dela Cruz" />
+              </div>
+              <div class="field">
+                <label for="phone">Phone Number</label>
+                <input type="tel" id="phone" required placeholder="09XX-XXX-XXXX" />
+              </div>
+            </div>
+            <div class="field">
+              <label for="email">Email Address</label>
+              <input type="email" id="email" placeholder="you@email.com" />
+            </div>
+            <div class="field-row">
+              <div class="field">
+                <label for="service">Service Needed</label>
+                <select id="service" required>
+                  <option value="">Select a service</option>
+                  <option>Cleaning</option>
+                  <option>Filling</option>
+                  <option>Root Canal</option>
+                  <option>Extraction</option>
+                  <option>Braces</option>
+                  <option>Crown</option>
+                  <option>Veneers</option>
+                  <option>Consultation</option>
+                  <option>Other</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="date">Preferred Date</label>
+                <input type="date" id="date" required />
+              </div>
+            </div>
+            <div class="field">
+              <label for="time">Preferred Time</label>
+              <input type="time" id="time" required />
+            </div>
+            <div class="field">
+              <label for="notes">Additional Notes (optional)</label>
+              <textarea id="notes" placeholder="Tell us more about your concern or preferred dentist"></textarea>
+            </div>
+            <button type="submit" class="btn btn--primary btn--block" id="bookBtn">
+              <span id="bookBtnText">Request Appointment</span>
+            </button>
+            <p class="form-note text-center">This sends a request only — our team will call or email you to confirm the final schedule.</p>
+          </form>
+
+          <div class="form-success" id="bookSuccess">
+            <div class="icon">✓</div>
+            <h3>Request Sent!</h3>
+            <p>Thank you! We've received your appointment request and will contact you shortly to confirm.</p>
+            <a href="index.html" class="btn btn--outline">Back to Home</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__grid">
+        <div>
+          <div class="footer__brand">
+            <img src="assets/img/logo.jpg" alt="Yuna's Dental Clinic logo" />
+            <strong>Yuna's Dental Clinic</strong>
+          </div>
+          <p style="max-width:280px; font-size:0.88rem;">Modern, gentle dental care for the whole family in Sampaloc, Manila.</p>
+        </div>
+        <div>
+          <h4>Quick Links</h4>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="services.html">Services</a></li>
+            <li><a href="contact.html">Contact</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Services</h4>
+          <ul>
+            <li><a href="services.html">Cleaning</a></li>
+            <li><a href="services.html">Filling</a></li>
+            <li><a href="services.html">Root Canal</a></li>
+            <li><a href="services.html">Braces</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Contact</h4>
+          <ul>
+            <li>2021 Mindanao Ave., Sampaloc, Manila</li>
+            <li><a href="tel:09982986745">0998-298-6745</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer__bottom">
+        <span>© <span data-year></span> Yuna's Dental Clinic. All rights reserved.</span>
+        <a href="admin/login.html">Staff Login</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/js/main.js"></script>
+  <script type="module">
+    import { supabase } from './shared/supabase-client.js';
+
+    const form = document.getElementById('bookForm');
+    const errorBox = document.getElementById('bookError');
+    const btn = document.getElementById('bookBtn');
+    const btnText = document.getElementById('bookBtnText');
+
+    const dateInput = document.getElementById('date');
+    dateInput.min = new Date().toISOString().slice(0, 10);
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      errorBox.classList.remove('show');
+      btn.disabled = true;
+      btnText.textContent = 'Sending…';
+
+      const { error } = await supabase.from('appointments').insert({
+        guest_name: document.getElementById('name').value.trim(),
+        guest_phone: document.getElementById('phone').value.trim(),
+        guest_email: document.getElementById('email').value.trim() || null,
+        appointment_date: document.getElementById('date').value,
+        start_time: document.getElementById('time').value,
+        service_type: document.getElementById('service').value,
+        notes: document.getElementById('notes').value.trim() || null,
+        status: 'requested',
+      });
+
+      if (error) {
+        errorBox.textContent = 'Something went wrong sending your request. Please try again or call us directly.';
+        errorBox.classList.add('show');
+        btn.disabled = false;
+        btnText.textContent = 'Request Appointment';
+        return;
+      }
+
+      form.style.display = 'none';
+      document.getElementById('bookSuccess').classList.add('show');
+    });
+  </script>
+</body>
+</html>

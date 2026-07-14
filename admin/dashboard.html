@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard — Yuna's Dental Clinic</title>
+  <link rel="icon" href="../assets/img/logo.jpg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/dashboard.css" />
+</head>
+<body>
+  <div class="admin-layout">
+    <aside class="sidebar">
+      <a href="dashboard.html" class="sidebar__brand">
+        <img src="../assets/img/logo.jpg" alt="Yuna's Dental Clinic" />
+        <span>
+          <strong>Yuna's Dental Clinic</strong>
+          <span>Staff Portal</span>
+        </span>
+      </a>
+      <nav class="sidebar__nav">
+        <a href="dashboard.html" class="active"><span class="ico">📊</span> Dashboard</a>
+        <a href="patients.html"><span class="ico">👤</span> Patients</a>
+        <a href="appointments.html"><span class="ico">📅</span> Appointments</a>
+        <a href="treatments.html"><span class="ico">🦷</span> Treatments</a>
+        <a href="billing.html"><span class="ico">💰</span> Billing</a>
+        <a href="../index.html"><span class="ico">🌐</span> View Website</a>
+      </nav>
+      <div class="sidebar__footer">
+        <div class="sidebar__user">
+          <div class="avatar" id="userAvatar">--</div>
+          <div>
+            <strong id="userName">Loading…</strong>
+            <span id="userRoleLabel">—</span>
+          </div>
+        </div>
+        <button class="btn btn--outline btn--block btn--sm" id="logoutBtn">Log Out</button>
+      </div>
+    </aside>
+
+    <main class="main">
+      <div class="topbar">
+        <button class="topbar__menu" id="sidebarToggle">☰</button>
+        <div>
+          <h1>Dashboard</h1>
+          <p class="topbar__sub" id="todayLabel">—</p>
+        </div>
+        <div class="quick-actions">
+          <a href="patients.html?new=1" class="btn btn--outline btn--sm">+ Add Patient</a>
+          <a href="appointments.html?new=1" class="btn btn--primary btn--sm">+ Book Appointment</a>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="stat-grid">
+          <div class="stat-card">
+            <div>
+              <strong id="statPatients">—</strong>
+              <span>Total Patients</span>
+            </div>
+            <div class="icon">👤</div>
+          </div>
+          <div class="stat-card">
+            <div>
+              <strong id="statToday">—</strong>
+              <span>Today's Appointments</span>
+            </div>
+            <div class="icon">📅</div>
+          </div>
+          <div class="stat-card">
+            <div>
+              <strong id="statUpcoming">—</strong>
+              <span>Upcoming Appointments</span>
+            </div>
+            <div class="icon">⏳</div>
+          </div>
+          <div class="stat-card">
+            <div>
+              <strong id="statCompleted">—</strong>
+              <span>Completed Appointments</span>
+            </div>
+            <div class="icon">✅</div>
+          </div>
+          <div class="stat-card">
+            <div>
+              <strong id="statCancelled">—</strong>
+              <span>Cancelled Appointments</span>
+            </div>
+            <div class="icon">🚫</div>
+          </div>
+          <div class="stat-card">
+            <div>
+              <strong id="statRevenue">—</strong>
+              <span>Monthly Revenue</span>
+            </div>
+            <div class="icon">💵</div>
+          </div>
+          <div class="stat-card">
+            <div>
+              <strong id="statOutstanding">—</strong>
+              <span>Outstanding Balances</span>
+            </div>
+            <div class="icon">🧾</div>
+          </div>
+          <div class="stat-card">
+            <div>
+              <strong id="statRequests">—</strong>
+              <span>Pending Requests</span>
+            </div>
+            <div class="icon">📥</div>
+          </div>
+        </div>
+
+        <div class="two-col">
+          <div class="panel">
+            <div class="panel__head">
+              <h2>Today's Schedule</h2>
+              <a href="appointments.html" class="btn btn--outline btn--sm">View Calendar</a>
+            </div>
+            <div class="table-wrap">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Time</th>
+                    <th>Patient</th>
+                    <th>Service</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="todayBody">
+                  <tr><td colspan="4" class="text-center text-muted" style="padding:24px;">Loading…</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel__head">
+              <h2>Recent Activity</h2>
+            </div>
+            <div class="activity-list" id="activityList">
+              <p class="text-muted">Loading…</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script type="module" src="js/dashboard.js"></script>
+</body>
+</html>

@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Staff Login — Yuna's Dental Clinic</title>
+  <link rel="icon" href="../assets/img/logo.jpg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/dashboard.css" />
+</head>
+<body>
+  <div class="auth-screen">
+    <div class="auth-card">
+      <div class="auth-card__brand">
+        <img src="../assets/img/logo.jpg" alt="Yuna's Dental Clinic" />
+        <strong>Yuna's Dental Clinic</strong>
+        <span>Staff Portal</span>
+      </div>
+
+      <div class="form-error" id="loginError"></div>
+
+      <form id="loginForm">
+        <div class="field">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" autocomplete="username" required placeholder="you@yunasdental.com" />
+        </div>
+        <div class="field">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" autocomplete="current-password" required placeholder="Enter your password" />
+        </div>
+        <button type="submit" class="btn btn--primary btn--block" id="loginBtn">
+          <span id="loginBtnText">Sign In</span>
+        </button>
+      </form>
+
+      <p style="text-align:center; margin-top:20px; font-size:0.82rem; color:var(--ink-soft);">
+        <a href="../index.html" style="color:var(--purple); font-weight:600;">← Back to website</a>
+      </p>
+    </div>
+  </div>
+
+  <script type="module">
+    import { supabase } from '../shared/supabase-client.js';
+
+    const form = document.getElementById('loginForm');
+    const errorBox = document.getElementById('loginError');
+    const btn = document.getElementById('loginBtn');
+    const btnText = document.getElementById('loginBtnText');
+
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session) window.location.href = 'dashboard.html';
+    });
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      errorBox.classList.remove('show');
+      btn.disabled = true;
+      btnText.textContent = 'Signing in…';
+
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+
+      if (error) {
+        errorBox.textContent = 'Incorrect email or password. Please try again.';
+        errorBox.classList.add('show');
+        btn.disabled = false;
+        btnText.textContent = 'Sign In';
+        return;
+      }
+
+      const { data: profile, error: profileError } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', data.user.id)
+        .single();
+
+      if (profileError || !profile) {
+        errorBox.textContent = 'Your account has no staff profile yet. Ask the clinic admin to set it up.';
+        errorBox.classList.add('show');
+        await supabase.auth.signOut();
+        btn.disabled = false;
+        btnText.textContent = 'Sign In';
+        return;
+      }
+
+      window.location.href = 'dashboard.html';
+    });
+  </script>
+</body>
+</html>
