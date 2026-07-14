@@ -1,6 +1,6 @@
 import { supabase, requireSession } from '../../shared/supabase-client.js';
 import { initAdminNav } from './nav.js';
-import { escapeHtml, formatTime, showToast, openModal, closeModal, initModalDismiss, statusLabel, patientFullName } from '../../shared/ui.js';
+import { escapeHtml, formatDate, formatTime, showToast, openModal, closeModal, initModalDismiss, statusLabel, patientFullName } from '../../shared/ui.js';
 
 const session = await requireSession();
 let view = 'month';
@@ -8,6 +8,7 @@ let anchorDate = new Date();
 anchorDate.setHours(0, 0, 0, 0);
 let patients = [];
 let rangeAppointments = [];
+let pendingRequests = [];
 
 if (session) {
   initAdminNav(session.profile);
@@ -15,6 +16,7 @@ if (session) {
   await loadPatientsDropdown();
   wireToolbar();
   wireForm();
+  await loadPendingRequests();
   await refresh();
 
   if (new URLSearchParams(window.location.search).get('new')) {
@@ -118,11 +120,6 @@ async function refresh() {
     rangeAppointments = data || [];
   }
 
-  const requestCount = rangeAppointments.filter((a) => a.status === 'requested').length;
-  document.getElementById('requestsLabel').textContent = requestCount
-    ? `${requestCount} pending request${requestCount === 1 ? '' : 's'} in view`
-    : 'No pending requests in view';
-
   document.getElementById('monthView').style.display = view === 'month' ? 'block' : 'none';
   document.getElementById('weekView').style.display = view === 'week' ? 'grid' : 'none';
   document.getElementById('dayView').style.display = view === 'day' ? 'flex' : 'none';
@@ -150,6 +147,69 @@ function apptName(a) {
 
 function apptsOnDate(dateStr) {
   return rangeAppointments.filter((a) => a.appointment_date === dateStr);
+}
+
+async function loadPendingRequests() {
+  const { data, error } = await supabase
+    .from('appointments')
+    .select('id, patient_id, guest_name, appointment_date, start_time, service_type, patients(first_name,last_name)')
+    .eq('status', 'requested')
+    .order('appointment_date', { ascending: true })
+    .order('start_time', { ascending: true });
+
+  pendingRequests = error ? [] : (data || []);
+  renderPendingRequests();
+
+  const topLabel = document.getElementById('requestsLabel');
+  topLabel.textContent = pendingRequests.length
+    ? `${pendingRequests.length} pending request${pendingRequests.length === 1 ? '' : 's'} awaiting review`
+    : 'No pending requests';
+}
+
+function renderPendingRequests() {
+  const panel = document.getElementById('requestsPanel');
+  const body = document.getElementById('requestsBody');
+  document.getElementById('requestsCount').textContent = pendingRequests.length;
+
+  if (!pendingRequests.length) {
+    panel.style.display = 'none';
+    return;
+  }
+  panel.style.display = 'block';
+
+  body.innerHTML = pendingRequests.map((a) => `
+    <tr>
+      <td class="cell-strong">${formatDate(a.appointment_date)}</td>
+      <td>${formatTime(a.start_time)}</td>
+      <td>${escapeHtml(apptName(a))}</td>
+      <td>${escapeHtml(a.service_type || '—')}</td>
+      <td>
+        <div class="row-actions">
+          <button class="btn btn--primary btn--sm" data-confirm="${a.id}">Confirm</button>
+          <button class="btn btn--outline btn--sm" data-open="${a.id}">Open</button>
+        </div>
+      </td>
+    </tr>
+  `).join('');
+
+  body.querySelectorAll('[data-open]').forEach((btn) => {
+    btn.addEventListener('click', () => openApptModal(btn.dataset.open));
+  });
+
+  body.querySelectorAll('[data-confirm]').forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      btn.disabled = true;
+      const { error } = await supabase.from('appointments').update({ status: 'scheduled' }).eq('id', btn.dataset.confirm);
+      if (error) {
+        showToast('Could not confirm this request.', 'error');
+        btn.disabled = false;
+        return;
+      }
+      showToast('Appointment confirmed.');
+      await loadPendingRequests();
+      await refresh();
+    });
+  });
 }
 
 function renderMonth() {
@@ -333,6 +393,7 @@ function wireForm() {
 
     showToast(id ? 'Appointment updated.' : 'Appointment booked.');
     closeModal('apptModal');
+    await loadPendingRequests();
     await refresh();
   });
 
@@ -346,6 +407,7 @@ function wireForm() {
     }
     showToast('Appointment deleted.');
     closeModal('apptModal');
+    await loadPendingRequests();
     await refresh();
   });
 }
