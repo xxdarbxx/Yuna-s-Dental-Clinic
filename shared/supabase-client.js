@@ -2,8 +2,7 @@
 // Loaded as an ES module: <script type="module" src="/shared/supabase-client.js"></script>
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
-// TODO: replace with your Supabase project URL (Dashboard → Settings → API).
-const SUPABASE_URL = 'REPLACE_WITH_YOUR_SUPABASE_URL';
+const SUPABASE_URL = 'https://jxcnjdohsfwcsrsewyxw.supabase.co';
 const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_cNE6-bnaV7ebakP_LbEihw_YXJv4btx';
 
 export const supabase = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
